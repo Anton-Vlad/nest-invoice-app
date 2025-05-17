@@ -8,10 +8,12 @@ import { InvoicesService } from './invoices/invoices.service';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma.module';
 import { AuthService } from './auth/auth.service';
+import { ConfigModule } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, UsersModule, AuthModule],
   controllers: [AppController],
-  providers: [AppService, AuthService, PrismaService, UsersService, InvoicesService],
+  providers: [AppService, AuthService, PrismaService, UsersService, InvoicesService, JwtService],
 })
-export class AppModule {}
+export class AppModule { }

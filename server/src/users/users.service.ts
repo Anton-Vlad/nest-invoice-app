@@ -53,4 +53,13 @@ export class UsersService {
             where,
         });
     }
+
+    async validateUser(email: string, pass: string): Promise<any> {
+        const user = await this.user({ email });
+        if (user && pass === user.password) {
+            const { password, ...result } = user;
+            return result;
+        }
+        return null;
+    }
 }
