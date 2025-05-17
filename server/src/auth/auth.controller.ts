@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, HttpCode, Request, HttpStatus, UseGuards, HttpException } from '@nestjs/common';
+import { Body, Controller, Post, Get, HttpCode, Request, HttpStatus, UseGuards, HttpException, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
@@ -17,6 +17,6 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile() {
-    return { message: 'Protected info.'};
+    return { message: 'Protected user info.' };
   }
 }

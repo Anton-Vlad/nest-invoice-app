@@ -6,15 +6,21 @@ import { Invoice, Prisma } from '@prisma/client';
 export class InvoicesService {
     constructor(private prisma: PrismaService) { }
 
-    async invoice(
-        invoiceWhereUniqueInput: Prisma.InvoiceWhereUniqueInput,
+    async findOne(
+        id: string,
     ): Promise<Invoice | null> {
+        const numberId = parseInt(id, 10);
+
+        if (isNaN(numberId)) {
+            throw new Error('Invalid invoice ID format');
+        }
+
         return this.prisma.invoice.findUnique({
-            where: invoiceWhereUniqueInput,
+            where: { id: numberId },
         });
     }
 
-    async invoices(params: {
+    async findAll(params: {
         skip?: number;
         take?: number;
         cursor?: Prisma.InvoiceWhereUniqueInput;
@@ -29,6 +35,10 @@ export class InvoicesService {
             where,
             orderBy,
         });
+    }
+
+    async countInvoices(where?: Prisma.InvoiceWhereInput): Promise<number> {
+        return this.prisma.invoice.count({ where });
     }
 
     async createInvoice(data: Prisma.InvoiceCreateInput): Promise<Invoice> {
