@@ -10,12 +10,7 @@ export class AuthService {
     ) { }
 
     async validateUser(email: string, pass: string): Promise<any> {
-        return this.usersService.validateUser( email, pass);
-        // if (user?.password !== pass) {
-        //     throw new UnauthorizedException();
-        // }
-        // const { password, ...result } = user;
-        // return result;
+        return this.usersService.validateUser(email, pass);
     }
 
     async login(user: any): Promise<any> {
