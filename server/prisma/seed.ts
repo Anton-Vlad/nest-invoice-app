@@ -11,28 +11,28 @@ async function main() {
 
   const john = await prisma.user.create({
     data: {
-      email:    'john@test.com',
+      email: 'john@test.com',
       password: '123456',
-      name:     'John Doe',
+      name: 'John Doe',
     },
   });
 
   const alice = await prisma.user.create({
     data: {
-      email:    'alice@test.com',
+      email: 'alice@test.com',
       password: '123456',
-      name:     'Alice Doe',
+      name: 'Alice Doe',
     },
   });
 
 
   const john_invoices = Array.from({ length: 100 }).map(() => ({
-    vendor_name:    faker.company.name(),
-    amount:         parseFloat(faker.finance.amount({min: 100, max: 1000, dec: 2})),
-    due_date:       faker.date.soon({ days: 30 }),
-    description:    faker.lorem.sentence(),
-    user_id:        john.id,
-    paid:           faker.datatype.boolean(),
+    vendor_name: faker.company.name(),
+    amount: parseFloat(faker.finance.amount({ min: 100, max: 1000, dec: 2 })),
+    due_date: faker.date.soon({ days: 30 }),
+    description: faker.lorem.sentence(),
+    user_id: john.id,
+    paid: faker.datatype.boolean(),
   }));
 
   await prisma.invoice.createMany({
