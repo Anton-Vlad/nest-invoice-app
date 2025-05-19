@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-// import invoi from '../features/example/exampleSlice';
+import authReducer from '../auth/authSlice';
+import invoicesReducer from '../invoices/invoicesSlice';
 
 export const store = configureStore({
     reducer: {
-        // example: exampleReducer,
+        auth: authReducer,
+        invoices: invoicesReducer,
     },
 });
 

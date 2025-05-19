@@ -33,7 +33,7 @@ export class InvoiceDto {
         return new InvoiceDto({
             id: invoice.id,
             vendor_name: invoice.vendor_name,
-            amount: invoice.amont,
+            amount: invoice.amount,
             due_date: formattedDate,
             description: description,
             user_id: invoice.user_id,

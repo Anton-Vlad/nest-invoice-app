@@ -1,0 +1,50 @@
+import { useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { loginUser } from '../auth/authSlice';
+import { useNavigate } from 'react-router-dom';
+
+export default function LoginPage() {
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const authStatus = useAppSelector((state) => state.auth.status);
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const result = await dispatch(loginUser({ email, password }));
+        if (loginUser.fulfilled.match(result)) {
+            navigate('/dashboard');
+        }
+    };
+
+    return (
+        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+            <form onSubmit={handleLogin} className="bg-white p-6 rounded shadow-md w-80">
+                <h2 className="text-xl mb-4 font-bold">Login</h2>
+                <input
+                    type="email"
+                    placeholder="Email"
+                    className="w-full p-2 mb-3 border rounded"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    className="w-full p-2 mb-3 border rounded"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                    type="submit"
+                    disabled={authStatus === 'loading'}
+                    className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+                >
+                    {authStatus === 'loading' ? 'Logging in...' : 'Login'}
+                </button>
+            </form>
+        </div>
+    );
+}
