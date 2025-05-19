@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { loginUser } from '../auth/authSlice';
+import { loginUser } from '../app/slices/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const authStatus = useAppSelector((state) => state.auth.status);
+    const authError = useAppSelector((state) => state.auth.error);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -23,6 +24,11 @@ export default function LoginPage() {
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div>
                 <h1 className="text-4xl text-center mb-4 font-bold">Invoice App</h1>
+
+                {authError ? (<p className="p-3 border border-red-500 text-red-500 rounded bg-red-200 mb-4">
+                    {authError}
+                </p>) : ""}
+
                 <form onSubmit={handleLogin} className="bg-white p-6 rounded shadow-md w-80">
                     <h2 className="text-xl mb-4 text-center">Login</h2>
                     <input

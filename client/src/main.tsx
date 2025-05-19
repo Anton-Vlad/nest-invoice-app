@@ -6,7 +6,7 @@ import { store } from './app/store';
 import { BrowserRouter } from 'react-router-dom';
 
 import { setAuthToken } from './api/axios';
-import { setToken } from './auth/authSlice';
+import { setToken } from './app/slices/auth/authSlice.ts';
 
 const savedToken = localStorage.getItem('nest_app_user_token');
 if (savedToken) {

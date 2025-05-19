@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import api from '../api/axios';
+import api from '../../../api/axios';
 
 
 export interface Invoice {
@@ -24,6 +24,7 @@ interface InvoiceState {
     currentPage: number;
     totalPages: number;
     perPage: number;
+    totals: number;
 }
 
 
@@ -34,6 +35,7 @@ const initialState: InvoiceState = {
     currentPage: 1,
     totalPages: 1,
     perPage: 10,
+    totals: 0,
 };
 
 export const fetchInvoices = createAsyncThunk(
@@ -66,6 +68,7 @@ const invoicesSlice = createSlice({
                 state.totalPages = action.payload.pagination.pageCount;
                 state.perPage = action.payload.pagination.limit;
                 state.currentPage = action.payload.pagination.page;
+                state.totals = action.payload.pagination.total;
             })
             .addCase(fetchInvoices.rejected, (state, action) => {
                 state.status = 'failed';

@@ -1,4 +1,4 @@
-import { type Invoice } from '../invoices/invoicesSlice';
+import { type Invoice } from '../app/slices/invoices/invoicesSlice';
 import { useState } from 'react';
 import Pagination from './Pagination';
 import Modal from './Modal';
