@@ -50,7 +50,7 @@ const authSlice = createSlice({
                 state.status = 'idle';
                 state.token = action.payload.access_token;
                 state.user = action.payload.user;
-                localStorage.setItem('nest_app_user_token', action.payload);
+                localStorage.setItem('nest_app_user_token', action.payload.access_token);
                 setAuthToken(state.token);
             })
             .addCase(loginUser.rejected, (state, ) => {
