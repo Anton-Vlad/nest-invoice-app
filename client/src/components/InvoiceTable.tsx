@@ -7,12 +7,16 @@ export default function InvoiceTable({
     invoices,
     currentPage,
     totalPages,
-    onPageChange
+    perPage,
+    onPageChange,
+    onPerPageChange
 }: {
     invoices: Invoice[],
     currentPage: number,
     totalPages: number,
-    onPageChange: (page: number) => void
+    perPage: number,
+    onPageChange: (page: number) => void,
+    onPerPageChange: (page: number) => void
 }) {
 
     const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
@@ -24,8 +28,11 @@ export default function InvoiceTable({
     }
 
     const handlePageChange = (page: number) => {
-        console.log('[TABLE] GO TO PAGE: ', page)
         onPageChange(page);
+    }
+
+    const handlePerPageChange = (page: number) => {
+        onPerPageChange(page);
     }
 
     const handleOpen = (invoice: Invoice) => {
@@ -69,7 +76,7 @@ export default function InvoiceTable({
 
                                 <td>
                                     <div className="flex justify-end aling-center pe-4">
-                                        <button className='bg-blue-500 px-3 py-1 rounded text-white'
+                                        <button className="bg-blue-500 px-3 py-1 rounded text-white rounded hover:bg-blue-600"
                                             onClick={() => handleOpen(inv)}
                                         >
                                             View
@@ -82,7 +89,10 @@ export default function InvoiceTable({
                 </table>
             </div>
 
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+            <Pagination currentPage={currentPage} totalPages={totalPages} perPage={perPage}
+                onPageChange={handlePageChange}
+                onPerPageChange={handlePerPageChange}
+            />
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 {selectedInvoice ? (
@@ -92,7 +102,7 @@ export default function InvoiceTable({
                         <p className="mb-1"><strong>Description:</strong> {selectedInvoice.description}</p>
                         <p className="mb-1"><strong>Amount:</strong> ${selectedInvoice.amount}</p>
                         <p className="mb-1">
-                            <strong className="pe-3">Status:</strong> 
+                            <strong className="pe-3">Status:</strong>
                             <span
                                 className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${selectedInvoice.paid
                                     ? 'bg-green-100 text-green-700'
@@ -107,7 +117,7 @@ export default function InvoiceTable({
                         </p>
 
                         <div className="flex justify-end">
-                            <button className='bg-blue-500 px-3 py-1 pb-2 rounded text-white'
+                            <button className="bg-blue-500 px-3 py-1 pb-2 rounded text-white rounded hover:bg-blue-600"
                                 onClick={() => setIsModalOpen(false)}
                             >
                                 Ok, got it

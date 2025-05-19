@@ -23,6 +23,7 @@ interface InvoiceState {
     error: string | null;
     currentPage: number;
     totalPages: number;
+    perPage: number;
 }
 
 
@@ -32,12 +33,13 @@ const initialState: InvoiceState = {
     error: null,
     currentPage: 1,
     totalPages: 1,
+    perPage: 10,
 };
 
 export const fetchInvoices = createAsyncThunk(
     'invoices/fetchInvoices',
-    async (page: number = 1) => {
-        const response = await api.get(`/invoices?page=${page}`);
+    async ({ page = 1, perPage = 10}: {  page: number, perPage: number}) => {
+        const response = await api.get(`/invoices?page=${page}&limit=${perPage}`);
         return response.data;
     }
 );
@@ -49,6 +51,9 @@ const invoicesSlice = createSlice({
         setPage: (state, action: PayloadAction<number>) => {
             state.currentPage = action.payload;
         },
+        setPerPage: (state, action: PayloadAction<number>) => {
+            state.perPage = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -59,6 +64,7 @@ const invoicesSlice = createSlice({
                 state.status = 'idle';
                 state.items = action.payload.data;
                 state.totalPages = action.payload.pagination.pageCount;
+                state.perPage = action.payload.pagination.limit;
                 state.currentPage = action.payload.pagination.page;
             })
             .addCase(fetchInvoices.rejected, (state, action) => {
@@ -75,6 +81,6 @@ const invoicesSlice = createSlice({
     },
 });
 
-export const { setPage } = invoicesSlice.actions;
+export const { setPage, setPerPage } = invoicesSlice.actions;
 
 export default invoicesSlice.reducer;
