@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
+import * as bcrypt from 'bcrypt';
 import { User, Prisma } from '@prisma/client';
 
 @Injectable()
@@ -55,11 +56,22 @@ export class UsersService {
     }
 
     async validateUser(email: string, pass: string): Promise<any> {
+        // const user = await this.user({ email });
+        // if (user && pass === user.password) {
+        //     const { password, ...result } = user;
+        //     return result;
+        // }
+        // return null;
+
         const user = await this.user({ email });
-        if (user && pass === user.password) {
-            const { password, ...result } = user;
-            return result;
-        }
-        return null;
+
+        if (!user) return null;
+
+        const isMatch = await bcrypt.compare(pass, user.password);
+
+        if (!isMatch) return null;
+
+        const { password, ...result } = user;
+        return result;
     }
 }

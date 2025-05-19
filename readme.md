@@ -30,6 +30,11 @@ npm install
 docker-compose up -d
 ```
 
+Create the local .env file from the .env.example
+```bash
+cp .env.example .env
+```
+
 Apply the database schema and seed initial data:
 ```bash
 npx prisma migrate dev --name init

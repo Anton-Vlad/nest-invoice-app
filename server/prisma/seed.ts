@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { faker } from '@faker-js/faker';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -8,11 +9,12 @@ async function main() {
   await prisma.invoice.deleteMany();
   await prisma.user.deleteMany();
 
+  const hashedPassword = await bcrypt.hash('123456', 10);
 
   const john = await prisma.user.create({
     data: {
       email: 'john@test.com',
-      password: '123456',
+      password: hashedPassword,
       name: 'John Doe',
     },
   });
@@ -20,7 +22,7 @@ async function main() {
   const alice = await prisma.user.create({
     data: {
       email: 'alice@test.com',
-      password: '123456',
+      password: hashedPassword,
       name: 'Alice Doe',
     },
   });
@@ -28,7 +30,7 @@ async function main() {
   const bob = await prisma.user.create({
     data: {
       email: 'bob@test.com',
-      password: '123456',
+      password: hashedPassword,
       name: 'Bob Doe',
     },
   });
