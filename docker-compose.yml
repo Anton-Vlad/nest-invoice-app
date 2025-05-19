@@ -13,8 +13,6 @@ services:
       - "5433:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      # Optionally, you can mount custom initialization scripts
-      # - ./init-scripts:/docker-entrypoint-initdb.d
 
 volumes:
   postgres-data:
