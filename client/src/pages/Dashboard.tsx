@@ -1,42 +1,45 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { fetchInvoices, type Invoice } from '../invoices/invoicesSlice';
+import { type RootState } from '../app/store';
+import { fetchInvoices, setPage } from '../invoices/invoicesSlice';
 import Navbar from '../components/Navbar';
+import InvoiceTable from '../components/InvoiceTable';
+import { logout } from '../auth/authSlice';
 
 export default function Dashboard() {
     const dispatch = useAppDispatch();
-    const { invoices, status } = useAppSelector((state) => state.invoices);
+    const navigate = useNavigate();
+    const invoices = useAppSelector((state: RootState) => state.invoices.items);
+    const error = useAppSelector((state) => state.invoices.error);
+    const page = useAppSelector((state: RootState) => state.invoices.currentPage);
+    const totalPages = useAppSelector((state: RootState) => state.invoices.totalPages);
 
     useEffect(() => {
-        dispatch(fetchInvoices());
-    }, [dispatch]);
+        dispatch(fetchInvoices(page));
+    }, [dispatch, page]);
+
+    useEffect(() => {
+        if (error === 'Unauthorized') {
+            dispatch(logout());
+            navigate('/');
+        }
+    }, [error]);
+
+    const handlePageChange = (newPage: number) => {
+        console.log('[DASHBOARD] GO TO PAGE: ', newPage)
+        dispatch(setPage(newPage));
+    };
 
     return (
-        <div>
+        <div className="min-h-screen bg-gray-100">
             <Navbar />
             <div className="p-6">
                 <h2 className="text-2xl font-bold mb-4">Invoices</h2>
                 {status === 'loading' ? (
                     <p>Loading...</p>
-                ) : (invoices ? (
-                    <table className="min-w-full border">
-                        <thead>
-                            <tr className="bg-gray-200">
-                                <th className="border px-4 py-2">ID</th>
-                                <th className="border px-4 py-2">Customer</th>
-                                <th className="border px-4 py-2">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {invoices.map((inv: Invoice) => (
-                                <tr key={inv.id}>
-                                    <td className="border px-4 py-2">{inv.id}</td>
-                                    <td className="border px-4 py-2">{inv.vendor_name}</td>
-                                    <td className="border px-4 py-2">${inv.amount}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table> ) : "No invoces"
+                ) : (invoices ? <InvoiceTable invoices={invoices} currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
+                    : "No invoces"
                 )}
             </div>
         </div>
