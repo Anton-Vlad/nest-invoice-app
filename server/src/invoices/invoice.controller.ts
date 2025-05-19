@@ -1,4 +1,4 @@
-import { Body, Controller, Query, Get, Param, UseGuards, HttpException, HttpStatus, Req } from '@nestjs/common';
+import { Body, Controller, Query, Get, Param, UseGuards, HttpException, HttpStatus, Req, Request } from '@nestjs/common';
 import { InvoicesService } from './invoices.service';
 import { JwtAuthGuard } from './../auth/jwt-auth.guard';
 import { PaginationQueryDto } from 'src/dto/pagination-quesy.dto';
@@ -13,16 +13,19 @@ export class InvoiceController {
 
     @UseGuards(JwtAuthGuard)
     @Get()
-    async getInvoices(@Query() query: PaginationQueryDto) {
+    async getInvoices(@Request() req, @Query() query: PaginationQueryDto) {
         try {
             const page = query.page ? Number(query.page) : 1;
             const limit = query.limit ? Number(query.limit) : 10;
             const skip = (page - 1) * limit;
 
-            const total = await this.invoiceService.countInvoices();
+            const total = await this.invoiceService.countInvoices({ user_id: req.user.id });
             const invoices = await this.invoiceService.findAll({
                 skip,
                 take: limit,
+                where: {
+                    user_id: req.user.id
+                }
             });
 
             const formattedInvoices = invoices.map((invoice: Invoice) => InvoiceDto.fromEntity(invoice));
@@ -43,13 +46,13 @@ export class InvoiceController {
 
     @UseGuards(JwtAuthGuard)
     @Get(':id')
-    async findOne(@Param('id') id: string) {
+    async findOne(@Request() req, @Param('id') id: string) {
         try {
             if (!id.match(/^\d+$/)) {
                 throw new HttpException('Invalid invoice ID format', HttpStatus.BAD_REQUEST);
             }
 
-            const invoice = await this.invoiceService.findOne(id);
+            const invoice = await this.invoiceService.findOne(id, { user_id: req.user.id });
 
             if (!invoice) {
                 throw new HttpException('Invoice not found', HttpStatus.NOT_FOUND);

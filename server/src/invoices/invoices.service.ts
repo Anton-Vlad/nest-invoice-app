@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Invoice, Prisma } from '@prisma/client';
 
@@ -8,6 +8,7 @@ export class InvoicesService {
 
     async findOne(
         id: string,
+        where?: Prisma.InvoiceWhereInput
     ): Promise<Invoice | null> {
         const numberId = parseInt(id, 10);
 
@@ -16,7 +17,7 @@ export class InvoicesService {
         }
 
         return this.prisma.invoice.findUnique({
-            where: { id: numberId },
+            where: { ...where, id: numberId },
         });
     }
 

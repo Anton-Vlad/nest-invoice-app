@@ -25,8 +25,16 @@ async function main() {
     },
   });
 
+  const bob = await prisma.user.create({
+    data: {
+      email: 'bob@test.com',
+      password: '123456',
+      name: 'Bob Doe',
+    },
+  });
 
-  const john_invoices = Array.from({ length: 100 }).map(() => ({
+
+  const john_invoices = Array.from({ length: 74 }).map(() => ({
     vendor_name: faker.company.name(),
     amount: parseFloat(faker.finance.amount({ min: 100, max: 1000, dec: 2 })),
     due_date: faker.date.soon({ days: 30 }),
@@ -40,6 +48,24 @@ async function main() {
   });
 
   console.log(`Seeded John with ${john_invoices.length} invoices.`);
+
+
+  const alice_invoices = Array.from({ length: 24 }).map(() => ({
+    vendor_name: faker.company.name(),
+    amount: parseFloat(faker.finance.amount({ min: 100, max: 1000, dec: 2 })),
+    due_date: faker.date.soon({ days: 30 }),
+    description: faker.lorem.sentence(),
+    user_id: alice.id,
+    paid: faker.datatype.boolean(),
+  }));
+
+  await prisma.invoice.createMany({
+    data: alice_invoices,
+  });
+
+  console.log(`Seeded Alice with ${alice_invoices.length} invoices.`);
+
+  console.log(`Bob has no invoices to be seeded.`);
 }
 
 main()

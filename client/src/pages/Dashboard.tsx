@@ -38,8 +38,8 @@ export default function Dashboard() {
                 <h2 className="text-2xl font-bold mb-4">Invoices</h2>
                 {status === 'loading' ? (
                     <p>Loading...</p>
-                ) : (invoices ? <InvoiceTable invoices={invoices} currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
-                    : "No invoces"
+                ) : (invoices && invoices.length ? <InvoiceTable invoices={invoices} currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
+                    : "No invoces for the current user."
                 )}
             </div>
         </div>
